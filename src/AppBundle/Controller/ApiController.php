@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Post;
 use FOS\RestBundle\Controller\FOSRestController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class ApiController extends FOSRestController
@@ -62,11 +63,15 @@ class ApiController extends FOSRestController
 
     /**
      * @NoRoute
-     * @Put("api/posts", name="put_post", defaults={"_format":"json"})
+     * @Put("api/posts/{id}", name="put_post", defaults={"_format":"json"})
      * @ParamConverter("post", converter="fos_rest.request_body")
      */
-    public function putPostAction(Post $post)
+    public function putPostAction($id, Post $post)
     {
+      if (!$this->getDoctrine()->getRepository('AppBundle\Entity\Post')->find($id)) {
+        throw new NotFoundHttpException("Post not found");
+      }
+
       $em = $this->getDoctrine()->getManager();
       $em->merge($post);
       $em->flush();

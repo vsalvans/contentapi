@@ -75,7 +75,7 @@ class ApiControllerTest extends WebTestCase
         //This post has title "Title test" let's change it to "Title for testing"
         $post->title = 'Title for testing';
 
-        $this->client->request('PUT', '/api/posts',  array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($post));
+        $this->client->request('PUT', '/api/posts/' . $post->id,  array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($post));
         $response = json_decode($this->client->getResponse()->getContent());
 
         //Test the response
@@ -87,6 +87,27 @@ class ApiControllerTest extends WebTestCase
         $this->client->request('GET', '/api/posts/' . $post->id);
         $post = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('Title for testing', $post->title);
+
+    }
+
+    public function testUpdatePostWithWrongId()
+    {
+        //Frist we create a post
+        $post = $this->addPost();
+
+        //This post has title "Title test" let's change it to "Title for testing"
+        $post->title = 'Title for testing';
+
+        $this->client->request('PUT', '/api/posts/' . 999,  array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($post));
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        //Test the response
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+
+        //Test if data has NOT been changed
+        $this->client->request('GET', '/api/posts/' . $post->id);
+        $post = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals('Title test', $post->title);
 
     }
 
