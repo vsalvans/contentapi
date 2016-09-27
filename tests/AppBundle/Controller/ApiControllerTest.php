@@ -75,7 +75,7 @@ class ApiControllerTest extends WebTestCase
         //This post has title "Title test" let's change it to "Title for testing"
         $post->title = 'Title for testing';
 
-        $this->client->request('PUT', '/api/posts/' . $post->id,  array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($post));
+        $this->client->request('PUT', '/api/posts',  array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($post));
         $response = json_decode($this->client->getResponse()->getContent());
 
         //Test the response
