@@ -2,30 +2,37 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use AppBundle\Entity\Post;
 use FOS\RestBundle\Controller\Annotations\NoRoute;
 use FOS\RestBundle\Controller\Annotations\Post as PostMethod;
 use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\Version;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\Serializer\SerializationContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\Post;
-use FOS\RestBundle\Controller\FOSRestController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 
 class ApiController extends FOSRestController
 {
 
     //Returns a post by id (the id is passed through the URL)
-    public function getPostAction(Post $post)
+
+    /**
+     * _@Cache(expires="+15 seconds", public=true)
+     */
+    public function getPostAction(Post $post, Request $request)
     {
-      // $view = $this->view($post, 200);
-      // $view->setHeader('Cache-control','public, max-age=10');
-      // return $view;
+      // $version = $request->get('version');
+      // $serializer = $this->get('serializer');
+      // $data = $serializer->serialize($post, 'json', SerializationContext::create()->setVersion($version));
+      // return new Response($data);
       return $post;
     }
 
@@ -57,7 +64,7 @@ class ApiController extends FOSRestController
       $em->remove($post);
       $em->flush();
 
-      return array('message' => 'Post deleted');
+      return $post;
     }
 
 
@@ -76,7 +83,7 @@ class ApiController extends FOSRestController
       $em->merge($post);
       $em->flush();
 
-      return array('message' => 'Post updated');
+      return $post;
     }
 
 }

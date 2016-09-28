@@ -3,6 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Since;
+use JMS\Serializer\Annotation\Until;
 
 /**
  * Post
@@ -32,9 +36,10 @@ class Post
      * @var string
      *
      * @ORM\Column(name="body", type="text")
+     * _@Exclude
+     * _@Since("v3")
      */
     private $body;
-
 
     /**
      * Get id

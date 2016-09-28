@@ -3,5 +3,6 @@ app:
     type:     annotation
 api:
     resource: "@AppBundle/Controller/ApiController.php"
+    #prefix: api/{version}
     prefix: api
     type: rest

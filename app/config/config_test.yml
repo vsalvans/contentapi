@@ -18,4 +18,4 @@ swiftmailer:
 doctrine:
     dbal:
         # add "_test" to the database name you set in parameters.ini:
-        dbname:   %database_name%_test
+        dbname:   "%database_name%_test"
